@@ -1,0 +1,49 @@
+# Compose file intended to contain service dependencies for local dev suchs as 
+# postgres. Anything that need to run under `docker-compose up` or `docker-compose start` 
+# can also be put in this file suchs as swagger-ui
+
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ecommerce
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  swaggerui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8982:8080"
+    volumes:
+      - ${PWD}/docs/swagger/:/usr/share/nginx/html/swagger
+    environment:
+      URL: /swagger/swagger.yaml
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:

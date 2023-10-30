@@ -1,0 +1,203 @@
+definitions:
+  entity.Product:
+    properties:
+      category:
+        type: string
+      createdAt:
+        type: string
+      description:
+        type: string
+      etalase:
+        type: string
+      id:
+        type: integer
+      price:
+        type: integer
+      rating:
+        type: number
+      sku:
+        type: string
+      title:
+        type: string
+      updatedAt:
+        type: string
+      userID:
+        type: integer
+      weight:
+        type: number
+    type: object
+  request.UpsertProduct:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      etalase:
+        type: string
+      price:
+        type: integer
+      product_images:
+        items:
+          properties:
+            image_url:
+              type: string
+            short_description:
+              type: string
+          type: object
+        type: array
+      sku:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: integer
+      weight:
+        type: number
+    type: object
+  request.UpsertProductReview:
+    properties:
+      comment:
+        type: string
+      product_id:
+        type: integer
+      rating:
+        type: integer
+    type: object
+  response.BaseResponse:
+    properties:
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+  response.Error:
+    properties:
+      message:
+        example: 'strconv.ParseInt: parsing "a": invalid syntax'
+        type: string
+      status_code:
+        example: 400
+        type: integer
+    type: object
+  response.GetProductListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/entity.Product'
+        type: array
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /product:
+    post:
+      description: create a product
+      operationId: v1-CreateProduct
+      parameters:
+      - description: UpsertProduct
+        in: body
+        name: UpsertProduct
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpsertProduct'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: create a product
+      tags:
+      - Product
+  /product/{product_id}:
+    get:
+      description: get a product
+      operationId: v1-GetDetailProduct
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: get a product
+      tags:
+      - Product
+    put:
+      description: update a product
+      operationId: v1-UpdateProduct
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      - description: UpsertProduct
+        in: body
+        name: UpsertProduct
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpsertProduct'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: update a product
+      tags:
+      - Product
+  /product/list:
+    get:
+      operationId: v1-GetProductList
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GetProductListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Error'
+  /product/review:
+    post:
+      description: create a product review
+      operationId: v1-CreateProductReview
+      parameters:
+      - description: UpsertProductReview
+        in: body
+        name: UpsertProductReview
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpsertProductReview'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: create a product review
+      tags:
+      - Product
+swagger: "2.0"

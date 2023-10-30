@@ -1,0 +1,7 @@
+environment: "local"
+database:
+  main:
+    driver: postgres
+    master: postgres://postgres:ecommerce@localhost:5432/postgres?sslmode=disable
+    slaves:
+      - postgres://postgres:ecommerce@localhost:5432/postgres?sslmode=disable
